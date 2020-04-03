@@ -1,5 +1,6 @@
 # folders and misc files
 .idea/
+.vscode/
 .DS_Store
 
 # Binaries for programs and plugins
