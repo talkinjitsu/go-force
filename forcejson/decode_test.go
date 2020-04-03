@@ -47,9 +47,7 @@ var ifaceNumAsNumber = map[string]interface{}{
 	"k4": map[string]interface{}{"kk1": "s", "kk2": Number("2")},
 }
 
-type tx struct {
-	x int
-}
+type tx struct {}
 
 // A type that can unmarshal itself.
 
@@ -518,7 +516,7 @@ func TestUnmarshal(t *testing.T) {
 		var scan scanner
 		in := []byte(tt.in)
 		if err := checkValid(in, &scan); err != nil {
-			if !reflect.DeepEqual(err, tt.err) {
+			if err.Error() != tt.err.Error() {
 				t.Errorf("#%d: checkValid: %#v", i, err)
 				continue
 			}
@@ -532,7 +530,7 @@ func TestUnmarshal(t *testing.T) {
 		if tt.useNumber {
 			dec.UseNumber()
 		}
-		if err := dec.Decode(v.Interface()); !reflect.DeepEqual(err, tt.err) {
+		if err := dec.Decode(v.Interface()); err != nil && err.Error() != tt.err.Error() {
 			t.Errorf("#%d: %v want %v", i, err, tt.err)
 			continue
 		}
@@ -777,8 +775,6 @@ type All struct {
 
 	Interface  interface{}
 	PInterface *interface{}
-
-	unexported int
 }
 
 type Small struct {
@@ -1236,8 +1232,6 @@ func TestUnmarshalSyntax(t *testing.T) {
 // Issue 4660
 type unexportedFields struct {
 	Name string
-	m    map[string]interface{} `force:"-"`
-	m2   map[string]interface{} `force:"abcd"`
 }
 
 func TestUnmarshalUnexported(t *testing.T) {

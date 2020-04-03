@@ -1,5 +1,6 @@
 package sobjects
 
+// Account sobject type
 type Account struct {
 	BaseSObject
 	BillingCity       string `force:",omitempty"`
@@ -9,6 +10,7 @@ type Account struct {
 	BillingStreet     string `force:",omitempty"`
 }
 
+// APIName returns the name of the API
 func (a Account) APIName() string {
 	return "Account"
 }

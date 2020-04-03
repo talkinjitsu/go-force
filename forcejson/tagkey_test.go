@@ -49,11 +49,11 @@ type emptyTag struct {
 }
 
 type misnamedTag struct {
-	X string `jsom:"Misnamed"`
+	X string `json:"Misnamed"`
 }
 
 type badFormatTag struct {
-	Y string `:"BadFormat"`
+	Y string `json:"BadFormat"`
 }
 
 type badCodeTag struct {
