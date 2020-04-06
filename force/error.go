@@ -32,7 +32,12 @@ func (e APIErrors) String() string {
 
 // Validate the error
 func (e APIErrors) Validate() bool {
-	return len(e) != 0
+	for _, err := range e {
+		if err.ErrorCode != "" {
+			return true
+		}
+	}
+	return false
 }
 
 func (e APIError) Error() string {
