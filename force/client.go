@@ -2,13 +2,12 @@ package force
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"github.com/talkinjitsu/go-force/forcejson"
 )
 
 const (
@@ -65,7 +64,7 @@ func (forceAPI *API) request(method, path string, params url.Values, payload, ou
 	var body io.Reader
 	if payload != nil {
 
-		jsonBytes, err := forcejson.Marshal(payload)
+		jsonBytes, err := json.Marshal(payload)
 		if err != nil {
 			return fmt.Errorf("Error marshaling encoded payload: %v", err)
 		}
@@ -88,7 +87,11 @@ func (forceAPI *API) request(method, path string, params url.Values, payload, ou
 	if headers != nil {
 		for h, v := range *headers {
 			req.Header.Set(h, v)
-		}
+	}
+
+	// default to not modifying assignments in the case of updating existing leads
+	if method == "PATCH" {
+		req.Header.Set("SForce-Auto-Assign", "FALSE")
 	}
 
 	// Send
@@ -114,7 +117,7 @@ func (forceAPI *API) request(method, path string, params url.Values, payload, ou
 	// Attempt to parse response into out
 	var objectUnmarshalErr error
 	if out != nil {
-		objectUnmarshalErr = forcejson.Unmarshal(respBytes, out)
+		objectUnmarshalErr = json.Unmarshal(respBytes, out)
 		if objectUnmarshalErr == nil {
 			return nil
 		}
@@ -122,7 +125,7 @@ func (forceAPI *API) request(method, path string, params url.Values, payload, ou
 
 	// Attempt to parse response as a force.com api error before returning object unmarshal err
 	apiErrors := APIErrors{}
-	if marshalErr := forcejson.Unmarshal(respBytes, &apiErrors); marshalErr == nil {
+	if marshalErr := json.Unmarshal(respBytes, &apiErrors); marshalErr == nil {
 		if apiErrors.Validate() {
 			// Check if error is oauth token expired
 			if forceAPI.oauth.Expired(apiErrors) {

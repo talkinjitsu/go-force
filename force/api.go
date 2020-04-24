@@ -2,6 +2,7 @@ package force
 
 import (
 	"fmt"
+	"net/url"
 )
 
 const (
@@ -11,6 +12,7 @@ const (
 	sObjectsKey        = "sobjects"
 	sObjectKey         = "sobject"
 	sObjectDescribeKey = "describe"
+	searchKey          = "search"
 
 	rowTemplateKey = "rowTemplate"
 	idKey          = "{ID}"
@@ -217,11 +219,11 @@ func (forceAPI *API) GetAccessToken() string {
 // RefreshToken refreshes the autentication token
 func (forceAPI *API) RefreshToken() error {
 	res := &RefreshTokenResponse{}
-	payload := map[string]string{
-		"grant_type":    "refresh_token",
-		"refresh_token": forceAPI.oauth.refreshToken,
-		"client_id":     forceAPI.oauth.clientID,
-		"client_secret": forceAPI.oauth.clientSecret,
+	params := url.Values{
+		"grant_type":    []string{"refresh_token"},
+		"refresh_token": []string{forceAPI.oauth.refreshToken},
+		"client_id":     []string{forceAPI.oauth.clientID},
+		"client_secret": []string{forceAPI.oauth.clientSecret},
 	}
 
 	err := forceAPI.Post("/services/oauth2/token", nil, payload, res, nil)
