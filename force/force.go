@@ -91,11 +91,12 @@ func CreateWithAccessToken(version, clientID, accessToken, instanceURL string) (
 }
 
 // CreateWithRefreshToken creates an API instance with refresh token
-func CreateWithRefreshToken(version, clientID, accessToken, instanceURL string) (*API, error) {
+func CreateWithRefreshToken(version, clientID, clientSecret, refreshToken, instanceURL string) (*API, error) {
 	oauth := &oauth{
-		clientID:    clientID,
-		AccessToken: accessToken,
-		InstanceURL: instanceURL,
+		clientID:     clientID,
+		clientSecret: clientSecret,
+		refreshToken: refreshToken,
+		InstanceURL:  instanceURL,
 	}
 
 	forceAPI := &API{
