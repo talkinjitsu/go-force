@@ -19,34 +19,34 @@ const (
 
 // Get issues a GET to the specified path with the given params and put the
 // umarshalled (json) result in the third parameter
-func (forceAPI *API) Get(path string, params url.Values, out interface{}) error {
-	return forceAPI.request("GET", path, params, nil, out)
+func (forceAPI *API) Get(path string, params url.Values, out interface{}, headers *map[string]string) error {
+	return forceAPI.request("GET", path, params, nil, out, headers)
 }
 
 // Post issues a POST to the specified path with the given params and payload
 // and put the unmarshalled (json) result in the third parameter
-func (forceAPI *API) Post(path string, params url.Values, payload, out interface{}) error {
-	return forceAPI.request("POST", path, params, payload, out)
+func (forceAPI *API) Post(path string, params url.Values, payload, out interface{}, headers *map[string]string) error {
+	return forceAPI.request("POST", path, params, payload, out, headers)
 }
 
 // Put issues a PUT to the specified path with the given params and payload
 // and put the unmarshalled (json) result in the third parameter
-func (forceAPI *API) Put(path string, params url.Values, payload, out interface{}) error {
-	return forceAPI.request("PUT", path, params, payload, out)
+func (forceAPI *API) Put(path string, params url.Values, payload, out interface{}, headers *map[string]string) error {
+	return forceAPI.request("PUT", path, params, payload, out, headers)
 }
 
 // Patch issues a PATCH to the specified path with the given params and payload
 // and put the unmarshalled (json) result in the third parameter
-func (forceAPI *API) Patch(path string, params url.Values, payload, out interface{}) error {
-	return forceAPI.request("PATCH", path, params, payload, out)
+func (forceAPI *API) Patch(path string, params url.Values, payload, out interface{}, headers *map[string]string) error {
+	return forceAPI.request("PATCH", path, params, payload, out, headers)
 }
 
 // Delete issues a DELETE to the specified path with the given payload
-func (forceAPI *API) Delete(path string, params url.Values) error {
-	return forceAPI.request("DELETE", path, params, nil, nil)
+func (forceAPI *API) Delete(path string, params url.Values, headers *map[string]string) error {
+	return forceAPI.request("DELETE", path, params, nil, nil, headers)
 }
 
-func (forceAPI *API) request(method, path string, params url.Values, payload, out interface{}) error {
+func (forceAPI *API) request(method, path string, params url.Values, payload, out interface{}, headers *map[string]string) error {
 	if err := forceAPI.oauth.Validate(); err != nil {
 		return fmt.Errorf("Error creating %v request: %v", method, err)
 	}
@@ -83,6 +83,11 @@ func (forceAPI *API) request(method, path string, params url.Values, payload, ou
 	req.Header.Set("Content-Type", contentType)
 	req.Header.Set("Accept", responseType)
 	req.Header.Set("Authorization", fmt.Sprintf("%v %v", "Bearer", forceAPI.oauth.AccessToken))
+
+	if headers != nil {
+		for h, v := range *headers {
+			req.Header.Set(h, v)
+	}
 
 	// default to not modifying assignments in the case of updating existing leads
 	if method == "PATCH" {
@@ -130,7 +135,7 @@ func (forceAPI *API) request(method, path string, params url.Values, payload, ou
 					return oauthErr
 				}
 
-				return forceAPI.request(method, path, params, payload, out)
+				return forceAPI.request(method, path, params, payload, out, nil)
 			}
 
 			return apiErrors
