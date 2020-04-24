@@ -85,6 +85,11 @@ func (forceAPI *API) request(method, path string, params url.Values, payload, ou
 	req.Header.Set("Accept", responseType)
 	req.Header.Set("Authorization", fmt.Sprintf("%v %v", "Bearer", forceAPI.oauth.AccessToken))
 
+	// default to not modifying assignments in the case of updating existing leads
+	if method == "PATCH" {
+		req.Header.Set("SForce-Auto-Assign", "FALSE")
+	}
+
 	// Send
 	forceAPI.traceRequest(req)
 	resp, err := http.DefaultClient.Do(req)
