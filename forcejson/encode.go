@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package json implements encoding and decoding of JSON objects as defined in
+// Package forcejson implements encoding and decoding of JSON objects as defined in
 // RFC 4627. The mapping between JSON objects and Go values is described
 // in the documentation for the Marshal and Unmarshal functions.
 //
@@ -201,6 +201,7 @@ func (e *UnsupportedTypeError) Error() string {
 	return "force: unsupported type: " + e.Type.String()
 }
 
+// UnsupportedValueError value error
 type UnsupportedValueError struct {
 	Value reflect.Value
 	Str   string
@@ -210,7 +211,7 @@ func (e *UnsupportedValueError) Error() string {
 	return "force: unsupported value: " + e.Str
 }
 
-// Before Go 1.2, an InvalidUTF8Error was returned by Marshal when
+// InvalidUTF8Error was returned before Go 1.2 by Marshal when
 // attempting to encode a string value with invalid UTF-8 sequences.
 // As of Go 1.2, Marshal instead coerces the string to valid UTF-8 by
 // replacing invalid bytes with the Unicode replacement rune U+FFFD.
@@ -224,6 +225,7 @@ func (e *InvalidUTF8Error) Error() string {
 	return "force: invalid UTF-8 in string: " + strconv.Quote(e.S)
 }
 
+// MarshalerError error
 type MarshalerError struct {
 	Type reflect.Type
 	Err  error
@@ -993,7 +995,7 @@ func typeFields(t reflect.Type) []field {
 	next := []field{{typ: t}}
 
 	// Count of queued names for current level and the next.
-	count := map[reflect.Type]int{}
+	var count = map[reflect.Type]int{}
 	nextCount := map[reflect.Type]int{}
 
 	// Types already visited at an earlier level.

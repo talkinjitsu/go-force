@@ -1,16 +1,13 @@
-go-force
-======
-
-[![wercker status](https://app.wercker.com/status/66ea433103de60e20ce0f96340a75828/m "wercker status")](https://app.wercker.com/project/bykey/66ea433103de60e20ce0f96340a75828)
+# go-force
 
 [Golang](http://golang.org/) API wrapper for [Force.com](http://www.force.com/), [Salesforce.com](http://www.salesforce.com/)
 
-Installation
-============
+## Installation
+
 	go get github.com/nimajalali/go-force/force
 
-Example
-============
+## Example
+
 ```go
 package main
 
@@ -18,8 +15,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/nimajalali/go-force/force"
-	"github.com/nimajalali/go-force/sobjects"
+	"github.com/talkinjitsu/go-force/force"
+	"github.com/talkinjitsu/go-force/sobjects"
 )
 
 type SomeCustomSObject struct {
@@ -41,7 +38,7 @@ type SomeCustomSObjectQueryResponse struct {
 
 func main() {
 	// Init the force
-	forceApi, err := force.Create(
+	forceAPI, err := force.Create(
 		"YOUR-API-VERSION",
 		"YOUR-CLIENT-ID",
 		"YOUR-CLIENT-SECRET",
@@ -56,7 +53,7 @@ func main() {
 
 	// Get somCustomSObject by ID
 	someCustomSObject := &SomeCustomSObject{}
-	err = forceApi.GetSObject("Your-Object-ID", nil, someCustomSObject)
+	err = forceAPI.GetSObject("Your-Object-ID", nil, someCustomSObject)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -65,7 +62,7 @@ func main() {
 
 	// Query
 	someCustomSObjects := &SomeCustomSObjectQueryResponse{}
-	err = forceApi.Query("SELECT Id FROM SomeCustomSObject__c LIMIT 10", someCustomSObjects)
+	err = forceAPI.Query("SELECT Id FROM SomeCustomSObject__c LIMIT 10", someCustomSObjects)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -73,8 +70,8 @@ func main() {
 	fmt.Printf("%#v", someCustomSObjects)
 }
 ```
-Documentation 
-=======
 
-* [Package Reference](http://godoc.org/github.com/nimajalali/go-force/force)
+## Documentation
+
+* [Package Reference](http://godoc.org/github.com/talkinjitsu/go-force/force)
 * [Force.com API Reference](http://www.salesforce.com/us/developer/docs/api_rest/)

@@ -365,14 +365,14 @@ func (d *decodeState) array(v reflect.Value) {
 		}
 		// Otherwise it's invalid.
 		fallthrough
+	case reflect.Array:
+	case reflect.Slice:
+		break
 	default:
 		d.saveError(&UnmarshalTypeError{"array", v.Type()})
 		d.off--
 		d.next()
 		return
-	case reflect.Array:
-	case reflect.Slice:
-		break
 	}
 
 	i := 0

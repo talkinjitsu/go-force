@@ -1,8 +1,9 @@
 package sobjects
 
+// Opportunity struct
 type Opportunity struct {
 	BaseSObject
-	AccountId       string  `force:",omitempty"`
+	AccountID       string  `force:",omitempty"`
 	Amount          float64 `force:",omitempty"`
 	CloseDate       string  `force:",omitempty"`
 	CurrencyIsoCode string  `force:",omitempty"`
@@ -13,14 +14,16 @@ type Opportunity struct {
 	IsSplit         bool    `force:",omitempty"`
 	IsWon           bool    `force:",omitempty"`
 	Name            string  `force:",omitempty"`
-	OwnerId         string  `force:",omitempty"`
+	OwnerID         string  `force:",omitempty"`
 	StageName       string  `force:",omitempty"`
 }
 
+// APIName name of the API
 func (t *Opportunity) APIName() string {
 	return "Opportunity"
 }
 
+// OpportunityQueryResponse query reponse struct
 type OpportunityQueryResponse struct {
 	BaseQuery
 	Records []Opportunity `json:"Records" force:"records"`

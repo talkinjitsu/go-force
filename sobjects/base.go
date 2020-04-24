@@ -5,46 +5,43 @@ import (
 	"strings"
 )
 
-var baseFieldNameMap map[string]string
-
-func init() {
-	baseFieldNameMap = map[string]string{
-		"Id":               "Id",
-		"IsDeleted":        "IsDeleted",
-		"Name":             "Name",
-		"CreatedDate":      "CreatedDate",
-		"CreatedById":      "CreatedById",
-		"LastModifiedDate": "LastModifiedDate",
-		"LastModifiedById": "LastModifiedById",
-		"SystemModstamp":   "SystemModstamp",
-	}
+var baseFieldNameMap = map[string]string{
+	"Id":               "Id",
+	"IsDeleted":        "IsDeleted",
+	"Name":             "Name",
+	"CreatedDate":      "CreatedDate",
+	"CreatedById":      "CreatedById",
+	"LastModifiedDate": "LastModifiedDate",
+	"LastModifiedById": "LastModifiedById",
+	"SystemModstamp":   "SystemModstamp",
 }
 
-// Base struct that contains fields that all objects, standard and custom, include.
+// BaseSObject struct that contains fields that all objects, standard and custom, include.
 type BaseSObject struct {
 	Attributes       SObjectAttributes `force:"attributes,omitempty" json:"-"`
-	Id               string            `force:",omitempty" json:",omitempty"`
+	ID               string            `force:",omitempty" json:",omitempty"`
 	IsDeleted        bool              `force:",omitempty" json:",omitempty"`
 	Name             string            `force:",omitempty" json:",omitempty"`
 	CreatedDate      string            `force:",omitempty" json:",omitempty"`
-	CreatedById      string            `force:",omitempty" json:",omitempty"`
+	CreatedByID      string            `force:",omitempty" json:",omitempty"`
 	LastModifiedDate string            `force:",omitempty" json:",omitempty"`
-	LastModifiedById string            `force:",omitempty" json:",omitempty"`
+	LastModifiedByID string            `force:",omitempty" json:",omitempty"`
 	SystemModstamp   string            `force:",omitempty" json:",omitempty"`
 }
 
+// SObjectAttributes attributes of the SObject
 type SObjectAttributes struct {
 	Type string `force:"type,omitempty"`
-	Url  string `force:"url,omitempty"`
+	URL  string `force:"url,omitempty"`
 }
 
-// Implementing this here because most objects don't have an external id and as such this is not needed.
+// ExternalIDAPIName Implementing this here because most objects don't have an external id and as such this is not needed.
 // Feel free to override this function when embedding the BaseSObject in other structs.
 func (b BaseSObject) ExternalIDAPIName() string {
 	return ""
 }
 
-// Fields that are returned in every query response. Use this to build custom structs.
+// BaseQuery Fields that are returned in every query response. Use this to build custom structs.
 // type MyCustomQueryResponse struct {
 // 	BaseQuery
 // 	Records []sobjects.Account `json:"records" force:"records"`
@@ -52,7 +49,7 @@ func (b BaseSObject) ExternalIDAPIName() string {
 type BaseQuery struct {
 	Done           bool    `json:"Done" force:"done"`
 	TotalSize      float64 `json:"TotalSize" force:"totalSize"`
-	NextRecordsUri string  `json:"NextRecordsUrl" force:"nextRecordsUrl"`
+	NextRecordsURI string  `json:"NextRecordsUrl" force:"nextRecordsUrl"`
 }
 
 // ConvertFieldNames takes in any interface that inplements SObject and a comma separated list of json field names.
